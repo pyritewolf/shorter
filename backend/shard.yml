@@ -1,0 +1,26 @@
+name: backend
+version: 0.1.0
+
+authors:
+  - Jules Morelli <jmorelli@manas.tech>
+
+targets:
+  backend:
+    main: src/backend.cr
+
+crystal: 1.0.0
+
+license: MIT
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  pg:
+    github: will/crystal-pg
+  micrate:
+    github: amberframework/micrate
+  clear:
+    github: anykeyh/clear
+    branch: master
+  jwt:
+    github: crystal-community/jwt
