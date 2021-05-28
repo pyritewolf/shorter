@@ -1,0 +1,16 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+      DOCKER_REPOSITORY: 'pyritewolf/shorter'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image & push to Docker Hub
+        run: ./build.sh

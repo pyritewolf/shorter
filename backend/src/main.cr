@@ -34,5 +34,5 @@ module Shorter
     env.response.content_type = "application/json"
   end
 
-  Kemal.run
+  Kemal.run ENV["API_PORT"].to_i
 end  
