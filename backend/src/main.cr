@@ -12,7 +12,7 @@ module Shorter
   VERSION = "0.1.0"
 
   # initialize a pool of database connection:
-  Clear::SQL.init("postgres://#{ENV["POSTGRES_USER"]}:#{ENV["POSTGRES_PASSWORD"]}@#{ENV["POSTGRES_HOST"]}/#{ENV["POSTGRES_DB"]}")
+  Clear::SQL.init("postgres://#{ENV["POSTGRES_USER"]}:#{ENV["POSTGRES_PASSWORD"]}@#{ENV["POSTGRES_HOST"]}:#{ENV["POSTGRES_PORT"]}/#{ENV["POSTGRES_DB"]}")
   
   @@oauth2_client : OAuth2::Client? = nil
 
