@@ -9,7 +9,8 @@
 		let token = localStorage.getItem('token')
 		if (!token) {
 			token = (new URLSearchParams(window.location.search)).get("token");
-			localStorage.setItem('token', token);
+			if (token)
+				localStorage.setItem('token', token);
 		}
 		isLoggedIn = !!token;
 	});

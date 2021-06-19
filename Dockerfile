@@ -12,9 +12,9 @@ ADD ./backend /app
 WORKDIR /app
 
 RUN shards install
-RUN crystal build ./src/main.cr
 
 COPY --from=frontend /app/public/ /app/public/
+RUN crystal build ./src/main.cr
 
 EXPOSE 80
 

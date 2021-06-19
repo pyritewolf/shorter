@@ -1,4 +1,9 @@
 module Shorter
+  get "/" do |env|
+    env.response.content_type = "text/html"
+    send_file(env, "public/index.html")
+  end
+
   get "/api/oauth/google" do |env|
     Shorter::Controllers.handle_oauth_login(env)
   end
@@ -12,7 +17,6 @@ module Shorter
   end
 
   get "/api/url" do |env|
-    print env.request.user
     Shorter::Controllers.handle_get_urls
   end
 

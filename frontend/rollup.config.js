@@ -49,9 +49,9 @@ export default {
 		// the bundle has been generated
 		!production && dev({
 			dirs: ['public'],
-			 port: 5000,
-			 proxy: { '/*': 'http://api:3000/' },
-			 spa: true,
+			port: 5000,
+			proxy: { '/*': 'http://api:3000/' },
+			spa: true,
 		}),
 
 		// Watch the `public` directory and refresh the
