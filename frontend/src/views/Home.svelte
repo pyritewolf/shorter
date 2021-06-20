@@ -3,7 +3,7 @@
 	import Button from '../components/form/Button.svelte';
 	import Input from '../components/form/Input.svelte';
 	import {Color} from '../types'
-  import { settings } from '../stores/settings.ts';
+  import { settings } from '../stores/settings';
 	
 	let formData = {
     path: "",
@@ -12,15 +12,16 @@
 	let urls = [];
   let copiedID = '';
 	
-	const handleSubmit = () => {
-		fetch('/api/url', {
+	const handleSubmit = async () => {
+		await fetch('/api/url', {
 			method: "POST",
 			body: JSON.stringify(formData),
 			headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }),
-		})
+		});
+    await getURLs();
 	};
 	
 	const getURLs = async () => {
@@ -60,7 +61,7 @@
           </span>
         {/if}
       </span>
-      <input type="text" id={`url-${url.id}`} value={`${$settings.shortUrl}/${url.path}`} />
+      <input type="text" id={`url-${url.id}`} value={`https://${$settings.shortUrl}/${url.path}`} />
     </div>		
   {:else}
     No URLs shortened so far
@@ -114,7 +115,7 @@
   }
 
   .list .col:not(.header):hover {
-    background-color: var(--dark-gray);
+    background-color: var(--darker-gray);
     transition: var(--transition);
   }
 

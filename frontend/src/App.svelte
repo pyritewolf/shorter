@@ -29,6 +29,6 @@
 		min-height: 100vh;
 		max-width: 128rem;
 		margin: auto;
-		padding: var(--gap-xl) 0;
+		padding: var(--gap-xl);
 	}
 </style>
