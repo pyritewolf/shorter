@@ -7,7 +7,7 @@ class Shorter::Controllers
     url.save!
   end
 
-  def self.handle_get_urls
+  def self.handle_get_urls()
     Shorter::URL.query.to_a.to_json
   end
 end
