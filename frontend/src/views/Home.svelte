@@ -108,7 +108,7 @@
   
   .list .col:not(.header) {
     cursor: pointer;
-		margin: var(--gap-xs);
+		margin-top: var(--gap-xs);
     transition: var(--transition);
     border-radius: var(--radius);
   }
