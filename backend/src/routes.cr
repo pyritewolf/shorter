@@ -14,6 +14,10 @@ module Shorter
   get "/api/url" do |env|
     Shorter::Controllers.handle_get_urls()
   end
+
+  get "/api/settings" do |env|
+    Shorter::Controllers.handle_get_settings()
+  end
   
   get "/" do |env|
     env.response.content_type = "text/html"

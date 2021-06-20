@@ -3,6 +3,7 @@
 	import Button from '../components/form/Button.svelte';
 	import Input from '../components/form/Input.svelte';
 	import {Color} from '../types'
+  import { settings } from '../stores/settings.ts';
 	
 	let formData = {
     path: "",
@@ -10,8 +11,6 @@
 	};
 	let urls = [];
   let copiedID = '';
-  
-  const baseURL = window.location.origin;
 	
 	const handleSubmit = () => {
 		fetch('/api/url', {
@@ -54,14 +53,14 @@
     <div class="col" on:click={() => copyToClipboard(`url-${url.id}`)}>
       <span>{url.redirect_to}</span>
       <span>
-        {baseURL}/<strong>{url.path}</strong>
+        {$settings.shortUrl}/<strong>{url.path}</strong>
         {#if copiedID === `url-${url.id}`}
           <span class="pill">
             Copied!
           </span>
         {/if}
       </span>
-      <input type="text" id={`url-${url.id}`} value={`${baseURL}/${url.path}`} />
+      <input type="text" id={`url-${url.id}`} value={`${$settings.shortUrl}/${url.path}`} />
     </div>		
   {:else}
     No URLs shortened so far
