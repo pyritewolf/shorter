@@ -89,7 +89,14 @@
 		display: grid;
 		grid-template-columns: 2fr 1fr;
 		padding: var(--gap-sm);
+    grid-column-gap: var(--gap-md);
 	}
+
+  .list .col span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
   
 	.list .col.header {
     text-transform: uppercase;
