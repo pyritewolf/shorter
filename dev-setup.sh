@@ -14,8 +14,13 @@ COLOR_LIGHT_BLUE="$(tput setaf 81)"
 # create database
 echo "$COLOR_LIGHT_BLUE 🧑‍🔧 Ensuring DB exists... $COLOR_REST"
 docker-compose up -d db
-docker-compose exec -e PGPASSWORD=$POSTGRES_PASSWORD db psql -h db -U $POSTGRES_USER -d postgres -c "SELECT 'CREATE DATABASE ${POSTGRES_DB}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${POSTGRES_DB}')"
+docker-compose exec -e PGPASSWORD=$POSTGRES_PASSWORD db psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d postgres -c "SELECT 'CREATE DATABASE ${POSTGRES_DB}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${POSTGRES_DB}')"
 echo "$COLOR_LIGHT_BLUE ✨ DB ${POSTGRES_DB} is set up! $COLOR_REST"
+
+echo "$COLOR_LIGHT_BLUE 🧑‍🔧 Running database migrations... $COLOR_REST"
+docker-compose run --rm api crystal db/micrate.cr up
+echo "$COLOR_LIGHT_BLUE ✨ Migrations up to date! The DB is ready to roll $COLOR_REST"
+
 
 # install dependencies
 echo "$COLOR_LIGHT_BLUE 🧑‍🔧 Installing backend dependencies... $COLOR_REST"

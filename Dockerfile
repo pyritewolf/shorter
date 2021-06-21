@@ -11,6 +11,8 @@ FROM crystallang/crystal:1.0.0 as backend
 ADD ./backend /app
 WORKDIR /app
 
+RUN  apt-get update && apt-get -y install sqlite3 libsqlite3-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 RUN shards install
 
 COPY --from=frontend /app/public/ /app/public/

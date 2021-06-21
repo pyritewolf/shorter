@@ -1,25 +1,22 @@
 # Shorter
 
-I wanted to try some shit out in @crystal-lang & @sveltejs.
+I wanted to try some shit out in Crystal & Svelte. Sue me.
 
 ## Wanna run it locally?
 
 - Clone the repo
 - Copy `.env.sample` to an `.env` file at the root of the project and add your Google auth keys
 - From the root of the project, run `./dev-setup.sh`
-- Go to `/backend/db/migrations`
-  - :warning: Micrate is not working for some reason, I'm using it just to create the migration files
-  - Copy the "up" part of each file and run that in the DB:
-    ```zsh
-    # before running anything
-    docker-compose up -d db
+- Run `docker-compose up`
+- Visit http://localhost:5000 (or http://ui.shorter.lvh.me:5000 if you're using [dockerdev](https://github.com/waj/dockerdev))!
 
-    # for each sentence you want to run:
-    docker-compose exec -e PGPASSWORD=$POSTGRES_PASSWORD db psql -h db -U $POSTGRES_USER -d postgres -c "The SQL you want to run!"
+## Development
 
-    # after you've run all the sentences
-    docker-compose stop
-    ```
-  - I know, it's ugly af
+### Migrations
 
-You should be able to run `docker-compose up` after all that jazz!
+The project has [Micrate](https://github.com/amberframework/micrate) set up because clear's migrations weren't documented enough for me to work them out. Mixing frameworks, yey!
+
+- Create migrations with `docker-compose run --rm api crystal db/micrate.cr create your_migration_name`
+  - Edit them in `db/migrations`
+- Run migrations with `docker-compose run --rm api crystal db/micrate.cr up`
+- Revert migrations with `docker-compose run --rm api crystal db/micrate.cr down`
