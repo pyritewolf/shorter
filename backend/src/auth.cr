@@ -1,3 +1,5 @@
+require "jwt"
+
 class HTTP::Request
   property user : Shorter::User? = nil
 
