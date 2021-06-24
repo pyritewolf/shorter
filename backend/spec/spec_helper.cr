@@ -1,2 +1,3 @@
 require "spec"
-require "../src/backend"
+require "spec-kemal"
+require "../src/main"
