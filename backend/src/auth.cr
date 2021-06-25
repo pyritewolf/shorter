@@ -15,9 +15,8 @@ def validate_auth(env)
     return  env.redirect ENV["CLIENT_URL"]
   end
   return false unless value.size > 0 && value.starts_with?("Bearer")
-  unless user = Shorter::Controller::OAuth2.get_user_from_token(value)
-    env.redirect ENV["CLIENT_URL"]
-  end
+  user = Shorter::Controller::OAuth2.get_user_from_token(value)
+  env.redirect ENV["CLIENT_URL"] unless user.not_nil!
   env.request.user = user
   env.response.content_type = "application/json"
   return true

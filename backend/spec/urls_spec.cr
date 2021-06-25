@@ -8,16 +8,17 @@ describe Shorter do
   end
 
   it "gets /api/url" do
-    url = Shorter::URL.new({
-      path: "balrog",
-      redirect_to: "gondolin"
-    })
-    url.save!
     user = Shorter::User.new({
       first_name: "Glorfindel",
-      google_id: "houseofthegoldenflower"
+      google_id: "houseofthegoldenflower",
     })
     user.save!
+    url = Shorter::URL.new({
+      path: "balrog",
+      redirect_to: "gondolin",
+      user_id: user.id,
+    })
+    url.save!
     token = Shorter::Controller::OAuth2.get_token_for(user)
     headers = HTTP::Headers.new
     headers.add("Authorization", "Bearer #{token}")
@@ -26,6 +27,7 @@ describe Shorter do
     result.size.should eq 1
     result[0]["path"].should eq url.path
     result[0]["redirect_to"].should eq url.redirect_to
+    result[0]["user_id"].should eq user.id
   end
 
   it "fails when posting /api/url with no auth" do
@@ -53,5 +55,6 @@ describe Shorter do
     result.size.should eq 1
     result[0].path.should eq body["path"]
     result[0].redirect_to.should eq body["redirect_to"]
+    result[0].user_id.should eq user.id
   end
 end

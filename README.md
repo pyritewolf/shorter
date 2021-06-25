@@ -16,7 +16,7 @@ I wanted to try some shit out in Crystal & Svelte. Sue me.
 
 The project has [Micrate](https://github.com/amberframework/micrate) set up because clear's migrations weren't documented enough for me to work them out. Mixing frameworks, yey!
 
-- Create migrations with `docker-compose run --rm api crystal db/micrate.cr create your_migration_name`
+- Create migrations with `docker-compose run --rm api crystal db/micrate.cr scaffold your_migration_name`
   - Edit them in `db/migrations`
 - Run migrations with `docker-compose run --rm api crystal db/micrate.cr up`
 - Revert migrations with `docker-compose run --rm api crystal db/micrate.cr down`
