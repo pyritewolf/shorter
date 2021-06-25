@@ -1,22 +1,22 @@
 module Shorter
   get "/api/oauth/google" do |env|
-    Shorter::Controllers.handle_oauth_login(env)
+    Shorter::Controller::OAuth2.handle_oauth_login(env)
   end
   
   get "/api/oauth/callback" do |env|
-    Shorter::Controllers.handle_oauth_callback(env)
+    Shorter::Controller::OAuth2.handle_oauth_callback(env)
   end
   
   post "/api/url" do |env|
-    Shorter::Controllers.handle_post_url(env)
+    Shorter::Controller::URL.handle_post_url(env)
   end
   
   get "/api/url" do |env|
-    Shorter::Controllers.handle_get_urls()
+    Shorter::Controller::URL.handle_get_urls()
   end
 
   get "/api/settings" do |env|
-    Shorter::Controllers.handle_get_settings()
+    Shorter::Controller::Settings.handle_get_settings()
   end
   
   get "/" do |env|
@@ -25,6 +25,6 @@ module Shorter
   end
 
   get "/:path" do |env|
-    Shorter::Controllers.handle_redirects(env)
+    Shorter::Controller::Redirects.handle_redirects(env)
   end
 end

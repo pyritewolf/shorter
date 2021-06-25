@@ -1,4 +1,4 @@
-class Shorter::Controllers
+class Shorter::Controller::URL
   def self.handle_post_url(env)
     url = Shorter::URL.new({
       path: env.params.json["path"],

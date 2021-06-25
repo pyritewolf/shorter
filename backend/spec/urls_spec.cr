@@ -18,7 +18,7 @@ describe Shorter do
       google_id: "houseofthegoldenflower"
     })
     user.save!
-    token = JWT.encode({id: user.id, google_id: user.google_id}, ENV["JWT_KEY"], JWT::Algorithm::HS512)
+    token = Shorter::Controller::OAuth2.get_token_for(user)
     headers = HTTP::Headers.new
     headers.add("Authorization", "Bearer #{token}")
     get("/api/url", headers)
@@ -39,7 +39,7 @@ describe Shorter do
       google_id: "houseofthegoldenflower"
     })
     user.save!
-    token = JWT.encode({id: user.id, google_id: user.google_id}, ENV["JWT_KEY"], JWT::Algorithm::HS512)
+    token = Shorter::Controller::OAuth2.get_token_for(user)
     headers = HTTP::Headers.new
     headers.add("Authorization", "Bearer #{token}")
     headers.add("Content-Type", "application/json")
