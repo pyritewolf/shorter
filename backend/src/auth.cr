@@ -23,7 +23,7 @@ def validate_auth(env)
 end
 
 class Shorter::GetAuthHandler < Kemal::Handler
-  only ["/api/url"]
+  only ["/api/url", "/api/me"]
 
   def call(env)
     # continue on to next handler unless the request matches the only filter
