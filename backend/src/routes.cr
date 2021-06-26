@@ -15,6 +15,10 @@ module Shorter
     Shorter::Controller::URL.handle_get_urls()
   end
 
+  delete "/api/url/:url_id" do |env|
+    Shorter::Controller::URL.handle_delete_url(env)
+  end
+
   get "/api/settings" do |env|
     Shorter::Controller::Settings.handle_get_settings()
   end

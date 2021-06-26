@@ -57,4 +57,70 @@ describe Shorter do
     result[0].redirect_to.should eq body["redirect_to"]
     result[0].user_id.should eq user.id
   end
+
+  it "fails when deleting /api/url/:url_id with no auth" do
+    delete "/api/url/1"
+    response.status_code.should eq 302
+  end
+
+  it "fails when deleting /api/url/:url_id for non-existing URL" do
+    user = Shorter::User.new({
+      first_name: "Glorfindel",
+      google_id: "houseofthegoldenflower"
+    })
+    user.save!
+    token = Shorter::Controller::OAuth2.get_token_for(user)
+    headers = HTTP::Headers.new
+    headers.add("Authorization", "Bearer #{token}")
+    headers.add("Content-Type", "application/json")
+    delete("/api/url/1", headers)
+    response.status_code.should eq 404
+  end
+
+  it "fails when deleting /api/url/:url_id for unauthed URL" do
+    user_1 = Shorter::User.new({
+      first_name: "Glorfindel",
+      google_id: "houseofthegoldenflower"
+    })
+    user_1.save!
+    user_2 = Shorter::User.new({
+      first_name: "Ecthelion",
+      google_id: "houseofthesilverfountains"
+    })
+    user_2.save!
+    url = Shorter::URL.new({
+      path: "balrog",
+      redirect_to: "gondolin",
+      user_id: user_2.id,
+    })
+    url.save!
+    token = Shorter::Controller::OAuth2.get_token_for(user_1)
+    headers = HTTP::Headers.new
+    headers.add("Authorization", "Bearer #{token}")
+    headers.add("Content-Type", "application/json")
+    delete("/api/url/#{url.id}", headers)
+    response.status_code.should eq 403
+  end
+
+  it "deletes /api/url/:url_id" do
+    user = Shorter::User.new({
+      first_name: "Glorfindel",
+      google_id: "houseofthegoldenflower"
+    })
+    user.save!
+    token = Shorter::Controller::OAuth2.get_token_for(user)
+    headers = HTTP::Headers.new
+    headers.add("Authorization", "Bearer #{token}")
+    headers.add("Content-Type", "application/json")
+    url = Shorter::URL.new({
+      path: "balrog",
+      redirect_to: "gondolin",
+      user_id: user.id,
+    })
+    url.save!
+    delete("/api/url/#{url.id}", headers)
+    response.status_code.should eq 200
+    result = Shorter::URL.query.to_a
+    result.size.should eq 0
+  end
 end

@@ -43,3 +43,15 @@ class Shorter::PostAuthHandler < Kemal::Handler
     return env.redirect ENV["CLIENT_URL"]
   end
 end
+
+
+class Shorter::DeleteAuthHandler < Kemal::Handler
+  only ["/api/url/:url_id"], "DELETE"
+
+  def call(env)
+    # continue on to next handler unless the request matches the only filter
+    return call_next(env) unless only_match?(env)
+    return call_next(env) if validate_auth(env)
+    return env.redirect ENV["CLIENT_URL"]
+  end
+end

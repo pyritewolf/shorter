@@ -13,4 +13,16 @@ class Shorter::Controller::URL
   def self.handle_get_urls()
     Shorter::URL.query.to_a.to_json
   end
+
+  def self.handle_delete_url(env)
+    url_id = env.params.url["url_id"]
+    unless url = Shorter::URL.query.find{ id == url_id }
+      raise HttpError.new(404, "URL not found")
+    end
+    user = env.request.user
+    return env.redirect ENV["CLIENT_URL"] if user.nil?
+
+    raise HttpError.new(403, "You can't delete that URL") unless url.user_id == user.id
+    url.delete
+  end
 end

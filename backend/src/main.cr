@@ -5,8 +5,6 @@ require "clear"
 
 require "./**"
 
-
-# TODO: Write documentation for `Shorter`
 module Shorter
   VERSION = "0.1.0"
 
@@ -31,8 +29,28 @@ module Shorter
 
   add_handler Shorter::GetAuthHandler.new
   add_handler Shorter::PostAuthHandler.new
+  add_handler Shorter::DeleteAuthHandler.new
   before_all do |env|
     env.response.content_type = "application/json"
+  end
+
+
+  class HttpError < Exception
+    property code, msg
+
+    def initialize(@code : Int = 500, @msg : String = "")
+      super(msg)
+    end
+  end
+
+  error 500 do |env, exc|
+    case exc
+    when HttpError
+      env.response.status_code = exc.code
+      env.response.print exc.msg
+      env.response.close
+    end
+    nil
   end
 
   Kemal.run ENV["API_PORT"].to_i
