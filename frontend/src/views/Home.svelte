@@ -4,11 +4,16 @@
 	import Input from '../components/form/Input.svelte';
 	import {Color} from '../types'
   import { settings } from '../stores/settings';
+  import { user } from '../stores/user';
+  import Icon from '../components/Icon.svelte';
+	import {ButtonType, IconName, Size} from '../components/types'
 	
-	let formData = {
+  const initialFormData = () => ({
     path: "",
 		redirect_to: "",
-	};
+	});
+
+	let formData = initialFormData();
 	let urls = [];
   let copiedID = '';
 	
@@ -21,6 +26,7 @@
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }),
 		});
+    formData = initialFormData();
     await getURLs();
 	};
 	
@@ -38,6 +44,16 @@
     setTimeout(() => copiedID = "", 3000)
   }
 
+  const handleDelete = async (id) => {
+		await fetch(`/api/url/${id}`, {
+			method: "DELETE",
+			headers: new Headers({
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }),
+		});
+    await getURLs();
+  }
+
 	onMount(async () => await getURLs());
 </script>
 <form on:submit|preventDefault={handleSubmit}>
@@ -52,7 +68,9 @@
   </div>
   {#each urls as url}
     <div class="col" on:click={() => copyToClipboard(`url-${url.id}`)}>
-      <span>{url.redirect_to}</span>
+      <span>
+        {url.redirect_to} 
+        <input type="text" id={`url-${url.id}`} value={`https://${$settings.shortUrl}/${url.path}`} /></span>
       <span>
         {$settings.shortUrl}/<strong>{url.path}</strong>
         {#if copiedID === `url-${url.id}`}
@@ -61,7 +79,15 @@
           </span>
         {/if}
       </span>
-      <input type="text" id={`url-${url.id}`} value={`https://${$settings.shortUrl}/${url.path}`} />
+      {#if url.user_id == $user.id}
+        <span>
+          <Button type={ButtonType.button} size={Size.sm} click={() => handleDelete(url.id)}>
+            <span  slot="icon" >
+              <Icon name={IconName.trash} />
+            </span>
+          </Button>
+        </span>
+      {/if}
     </div>		
   {:else}
     No URLs shortened so far
@@ -88,8 +114,8 @@
 
 	.list .col {
 		display: grid;
-		grid-template-columns: 2fr 1fr;
-		padding: var(--gap-sm);
+		grid-template-columns: 2fr 1fr min-content;
+		padding: var(--gap-xs);
     grid-column-gap: var(--gap-md);
 	}
 
@@ -97,6 +123,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    display: flex;
+    align-items: center;
   }
   
 	.list .col.header {

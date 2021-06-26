@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { InputType } from "./types"
+  import { InputType } from "../types"
   export let name : string = "";
   export let placeholder : string = "";
   export let type : InputType = InputType.text;

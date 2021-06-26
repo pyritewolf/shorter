@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { ButtonType } from "./types"
+  import { ButtonType, Size } from "../types"
   import { Color } from "../../types"
+
   export let type : ButtonType = ButtonType.submit;
   export let color : Color = Color.darkestGray;
   export let textColor : Color = Color.white;
+  export let size : Size = Size.md;
   export let click = () => {};
 
   let focused : boolean = false;
@@ -43,9 +45,19 @@
     color: var(--white);
     transition: var(--transition);
   }
+
+  .small {
+    height: calc(var(--input-height) - var(--gap-xs) * 2)
+  }
+  .small button {
+    padding: var(--gap-xs);
+  }
 </style>
-<div class="root" class:focused style="--color: var({color}); --text-color: var({textColor})" on:click={click}>
+<div class="root {size}" class:focused style="--color: var({color}); --text-color: var({textColor})" on:click={click}>
   <button {type} 
     on:focus={() => focused = true}
-    on:blur={() => focused = false}><slot/></button>
+    on:blur={() => focused = false}>
+    <slot name="icon" />
+    <slot/>
+  </button>
 </div>

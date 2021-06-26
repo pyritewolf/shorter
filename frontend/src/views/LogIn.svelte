@@ -1,6 +1,6 @@
 <script lang="ts">
 import Button from "../components/form/Button.svelte";
-import { ButtonType } from "../components/form/types";
+import { ButtonType } from "../components/types";
 
 </script>
 
