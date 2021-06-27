@@ -29,6 +29,7 @@ module Shorter
 
   add_handler Shorter::GetAuthHandler.new
   add_handler Shorter::PostAuthHandler.new
+  add_handler Shorter::PutAuthHandler.new
   add_handler Shorter::DeleteAuthHandler.new
   before_all do |env|
     env.response.content_type = "application/json"
