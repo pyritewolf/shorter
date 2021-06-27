@@ -9,6 +9,7 @@
 <style>
   .icon {
     font-size: var(--size);
+    line-height: 1;
     color: var(--color);
   }
 </style>

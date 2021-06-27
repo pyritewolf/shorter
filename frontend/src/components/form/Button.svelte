@@ -30,7 +30,9 @@
     color: var(--text-color);
     width: 100%;
     height: 100%;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
     border-radius: var(--radius);
     text-align: center;
     cursor: pointer;
@@ -57,7 +59,7 @@
   <button {type} 
     on:focus={() => focused = true}
     on:blur={() => focused = false}>
-    <slot name="icon" />
     <slot/>
+    <slot name="icon" />
   </button>
 </div>
