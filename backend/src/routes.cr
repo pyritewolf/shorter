@@ -12,7 +12,7 @@ module Shorter
   end
   
   get "/api/url" do |env|
-    Shorter::Controller::URL.handle_get_urls()
+    Shorter::Controller::URL.handle_get_urls(env)
   end
 
   put "/api/url/:url_id" do |env|
