@@ -34,4 +34,5 @@ export type URL = {
   redirect_to: string;
   path: string;
   user_id: number;
+  is_private: boolean;
 };

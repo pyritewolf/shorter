@@ -3,6 +3,7 @@
   import Icon from "./Icon.svelte";
   import { ButtonType, IconName, Size } from "./types";
   import type { Settings, URL } from "./types";
+import Toggle from "./form/Toggle.svelte";
 
   export let url : URL;
   export let settings : Settings;
@@ -48,7 +49,7 @@
     enableEdit = !enableEdit;
   }
 </script>
-<form class="col" on:click={copyToClipboard}>
+<form class="col" on:click={copyToClipboard} title="Click to copy this shorter URL to your clipboard">
   <span>
     <input type="text"  bind:value={url.redirect_to} name="url-{url.id}-redirect_to" readonly={!enableEdit}/>
     <input type="hidden" id={`url-${url.id}`} value={`https://${settings.shortUrl}/${url.path}`} />
@@ -59,6 +60,15 @@
       <span class="pill">
         Copied!
       </span>
+    {/if}
+    {#if enableEdit}
+      <Toggle name="private" bind:value={url.is_private} size={Size.sm}>
+        Make private
+      </Toggle>
+    {:else if url.is_private}
+        <span class="pill">
+          Private
+        </span>
     {/if}
   </span>
   {#if isOwn}
@@ -93,7 +103,7 @@
 <style>
   .col {
 		display: grid;
-		grid-template-columns: 5fr 2fr 1fr;
+		grid-template-columns: 2fr 2fr 1fr;
 		padding: var(--gap-xs);
     grid-column-gap: var(--gap-md);
     cursor: pointer;
@@ -116,8 +126,8 @@
     background-color: var(--dark-secondary);
     padding: 0  var(--gap-xs);
     display: inline-block;
-    margin-left: var(--gap-md);
-    border-radius: var(--radius);
+    margin-left: var(--gap-sm);
+    border-radius: var(--font-sm);
     font-size: var(--font-sm);
     text-transform: uppercase;
   }
@@ -149,6 +159,7 @@
     color: var(--secondary);
     transition: var(--transition);
     font-weight: bold;
+    margin-right: var(--gap-md)
   }
 
   .col:hover .url input[type="text"] {
