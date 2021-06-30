@@ -13,11 +13,29 @@ import Toggle from "./form/Toggle.svelte";
   let copied = false;
   let enableEdit = false;
 
-  const copyToClipboard = () => {
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  }
+
+  const copyToClipboard = async () => {
     if (enableEdit) return;
-    const copyText : HTMLInputElement = document.querySelector(`#url-${url.id}`);
-    copyText.select();
-    document.execCommand("copy")
+    const text = `https://${settings.shortUrl}/${url.path}`
+    if (!navigator.clipboard)
+      fallbackCopyTextToClipboard(text);
+    else
+      navigator.clipboard.writeText(text);
     copied = true;
     setTimeout(() => copied = false, 3000)
   }
@@ -52,7 +70,6 @@ import Toggle from "./form/Toggle.svelte";
 <form class="col" on:click={copyToClipboard} title="Click to copy this shorter URL to your clipboard">
   <span>
     <input type="text"  bind:value={url.redirect_to} name="url-{url.id}-redirect_to" readonly={!enableEdit}/>
-    <input type="hidden" id={`url-${url.id}`} value={`https://${settings.shortUrl}/${url.path}`} />
   </span>
   <span class="url">
     {settings.shortUrl}/<input type="text" bind:value={url.path} name="url-{url.id}-path" readonly={!enableEdit}/>
