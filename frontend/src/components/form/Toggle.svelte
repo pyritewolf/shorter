@@ -10,11 +10,13 @@
       width: '3rem',
       height: '1.2rem',
       knob: '1.8rem',
+      overallHeight: 'var(--knob)',
     },
     medium: {
       width: '4rem',
       height: '1.8rem',
       knob: '2.6rem',
+      overallHeight: 'var(--input-height)',
     },
   };
 
@@ -33,7 +35,7 @@
   .toggle {
     --overflow: calc((var(--knob) - var(--height)) / 2);
     min-width: fit-content;
-    height: var(--knob);
+    height: var(--overallHeight);
     display: flex;
     align-items: center;
   }

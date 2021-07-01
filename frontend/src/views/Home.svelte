@@ -7,6 +7,7 @@
   import { user } from '../stores/user';
   import Url from '../components/Url.svelte';
 import Toggle from '../components/form/Toggle.svelte';
+import { InputType } from '../components/types';
 	
   const initialFormData = () => ({
     path: "",
@@ -39,8 +40,24 @@ import Toggle from '../components/form/Toggle.svelte';
 	onMount(async () => await getURLs());
 </script>
 <form on:submit|preventDefault={handleSubmit}>
-  <Input placeholder="your url" bind:value={formData.redirect_to}/> 
-  <Input placeholder="the path you want it to have" bind:value={formData.path}/> 
+	<Input
+		required
+		name="new-url"
+		label="Long URL"
+		placeholder="https://yourSuperDuperLong.Url/withWeirdSymbols/andSuperBoringDetails" 
+		bind:value={formData.redirect_to}
+		type={InputType.url}
+		/> 
+  <Input
+		required
+		name="new-path"
+		label="Path"
+		pre={`${$settings.shortUrl}/`}
+		placeholder="the path you want it to have"
+		pattern={"[a-zA-Z0-9_\-]{3,}"}
+		bind:value={formData.path}
+		help="At least 3 characters, only letters, numbers, hyphens and underscores"
+		/> 
 	<Toggle name="private" bind:value={formData.is_private}>
 		Make private
 	</Toggle>
@@ -62,7 +79,7 @@ import Toggle from '../components/form/Toggle.svelte';
 	form {
 		display: flex;
 		margin-bottom: var(--gap-md);
-    align-items: center;
+    align-items: flex-end;
 		gap: var(--gap-md)
 	}
 

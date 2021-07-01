@@ -1,6 +1,7 @@
 export enum InputType {
   text = "text",
   number = "number",
+  url = "url",
 }
 
 export enum ButtonType {

@@ -43,7 +43,8 @@
 	--gradient-animation: backgroundMagic 20s linear infinite;
 	--transition: 0.2s;
 
-	--input-height: 4.9rem;
+	--input-height: 4.8rem;
+	--field-height: 7rem;
 }
 
 * {
