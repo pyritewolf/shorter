@@ -149,12 +149,6 @@ import Toggle from "./form/Toggle.svelte";
     text-transform: uppercase;
   }
 
-  input[type="hidden"] {
-    height: 0;
-    overflow: hidden;
-    padding: 0;
-  }
-
   input[type="text"] {
     width: 100%;
     border: 0;

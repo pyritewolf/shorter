@@ -62,6 +62,7 @@ import Toggle from '../components/form/Toggle.svelte';
 	form {
 		display: flex;
 		margin-bottom: var(--gap-md);
+    align-items: center;
 		gap: var(--gap-md)
 	}
 

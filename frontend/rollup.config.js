@@ -3,6 +3,7 @@ import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 // import livereload from 'rollup-plugin-livereload';
+import replaceHtmlVars from 'rollup-plugin-replace-html-vars';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
@@ -16,7 +17,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/build/bundle.js',
 	},
 	plugins: [
 		svelte({
@@ -61,6 +62,11 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
+		replaceHtmlVars({
+			files: 'public/*.html',
+			from: /\${hash}/g,
+			to: Date.now(),
+	})
 	],
 	watch: {
 		clearScreen: false

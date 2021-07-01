@@ -31,11 +31,15 @@
 </div>
 <style>
   .toggle {
+    --overflow: calc((var(--knob) - var(--height)) / 2);
     min-width: fit-content;
     height: var(--knob);
+    display: flex;
+    align-items: center;
   }
-
+  
   .wrapper {
+    padding-left: var(--overflow);
     display: flex;
     gap: var(--gap-sm);
     align-items: center;
@@ -75,8 +79,8 @@
     height: var(--knob);
     background-color: var(--dark-gray);
     position: absolute;
-    margin-left: calc((var(--knob) - var(--height)) / -2);
-    margin-top: calc((var(--knob) - var(--height)) / -2);
+    margin-left: calc(var(--overflow) * -1);
+    margin-top: calc(var(--overflow) * -1);
     border-radius: calc(var(--knob) / 2);
     transition: var(--transition);
   }
@@ -84,6 +88,6 @@
   .slide.active::before {
     background-color: var(--dark-primary);
     position: absolute;
-    margin-left: calc(100% - var(--knob) + (var(--knob) - var(--height)) / 2);
+    margin-left: calc(100% - var(--knob) + var(--overflow));
   }
 </style>
