@@ -10,6 +10,7 @@
 	import Toggle from '../components/form/Toggle.svelte';
 	import { InputType } from '../components/types';
 	import type { URL } from '../components/types';
+	import Loading from '../components/Loading.svelte';
 	
   const initialFormData = () => ({
     path: "",
@@ -38,7 +39,7 @@
 	onMount(async () => await getURLs());
 </script>
 {#await $settings}
-	<p>Loading settings</p>
+	<Loading />
 {:then config}
 	<form on:submit|preventDefault={handleSubmit}>
 		<Input

@@ -2,12 +2,19 @@ class Shorter::Controller::URL
   def self.handle_post_url(env)
     user = env.request.user
     raise HttpError.new(401) if user.nil?
-    url = Shorter::URL.new({
-      path: env.params.json["path"],
-      redirect_to: env.params.json["redirect_to"],
-      is_private: env.params.json["is_private"],
-      user_id: user.id
-    })
+    begin
+      url = Shorter::URL.new({
+        path: env.params.json["path"],
+        redirect_to: env.params.json["redirect_to"],
+        is_private: env.params.json["is_private"],
+        user_id: user.id
+      })
+    rescue ex : KeyError
+      unless msg = ex.message
+        raise HttpError.new(422, "Missing URL information, check your form!")
+      end
+      raise HttpError.new(422, "Missing URL information: #{msg.split(" ")[-1]}")
+    end
     url.save!
   end
 
@@ -28,9 +35,16 @@ class Shorter::Controller::URL
     raise HttpError.new(401) if user.nil?
 
     raise HttpError.new(403, "You can't edit that URL") unless url.user_id == user.id
-    url.redirect_to = env.params.json["redirect_to"].to_s
-    url.path = env.params.json["path"].to_s
-    url.is_private = JSON.parse(env.params.json["is_private"].to_s).as_bool
+    begin
+      url.redirect_to = env.params.json["redirect_to"].to_s
+      url.path = env.params.json["path"].to_s
+      url.is_private = JSON.parse(env.params.json["is_private"].to_s).as_bool
+    rescue ex : KeyError
+      unless msg = ex.message
+        raise HttpError.new(422, "Missing URL information, check your form!")
+      end
+      raise HttpError.new(422, "Missing URL information: #{msg.split(" ")[-1]}")
+    end
     url.save!
   end
 
