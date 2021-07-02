@@ -3,7 +3,7 @@ require "./spec_helper"
 describe Shorter do
   it "fails when getting /api/me with no auth" do
     get "/api/me"
-    response.status_code.should eq 302
+    response.status_code.should eq 401
   end
 
   it "gets my own user info for /api/me" do

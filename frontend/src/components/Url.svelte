@@ -3,10 +3,11 @@
   import Icon from "./Icon.svelte";
   import { ButtonType, IconName, Size } from "./types";
   import type { Settings, URL } from "./types";
-import Toggle from "./form/Toggle.svelte";
+  import Toggle from "./form/Toggle.svelte";
+  import { api, APIStatus } from "../stores/api";
 
   export let url : URL;
-  export let settings : Settings;
+  export let shortUrl: string;
   export let isOwn : Boolean = false;
   export let onAction : Function;
 
@@ -31,7 +32,7 @@ import Toggle from "./form/Toggle.svelte";
 
   const copyToClipboard = async () => {
     if (enableEdit) return;
-    const text = `https://${settings.shortUrl}/${url.path}`
+    const text = `https://${shortUrl}/${url.path}`
     if (!navigator.clipboard)
       fallbackCopyTextToClipboard(text);
     else
@@ -41,26 +42,22 @@ import Toggle from "./form/Toggle.svelte";
   }
 
   const handleDelete = async () => {
-		await fetch(`/api/url/${url.id}`, {
+		const response = await $api(`/api/url/${url.id}`, {
 			method: "DELETE",
-			headers: new Headers({
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }),
 		});
-    onAction();
+		if (response.status === APIStatus.ok)
+      onAction();
   }
 
   const handleEdit = async () => {
-		await fetch(`/api/url/${url.id}`, {
+		const response = await $api(`/api/url/${url.id}`, {
 			method: "PUT",
 			body: JSON.stringify(url),
-			headers: new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }),
 		});
-    enableEdit = false;
-    onAction();
+		if (response.status === APIStatus.ok) {
+      enableEdit = false;
+      onAction();
+    }
   }
 
   const toggleEdit = () => {
@@ -72,7 +69,7 @@ import Toggle from "./form/Toggle.svelte";
     <input type="text"  bind:value={url.redirect_to} name="url-{url.id}-redirect_to" readonly={!enableEdit}/>
   </span>
   <span class="url">
-    {settings.shortUrl}/<input type="text" bind:value={url.path} name="url-{url.id}-path" readonly={!enableEdit}/>
+    {shortUrl}/<input type="text" bind:value={url.path} name="url-{url.id}-path" readonly={!enableEdit}/>
     {#if copied}
       <span class="pill">
         Copied!

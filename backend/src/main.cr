@@ -40,6 +40,9 @@ module Shorter
     property code, msg
 
     def initialize(@code : Int = 500, @msg : String = "")
+      if @code == 401 && @msg == ""
+        @msg = "You need to log in to do this!"
+      end
       super(msg)
     end
   end
@@ -47,8 +50,11 @@ module Shorter
   error 500 do |env, exc|
     case exc
     when HttpError
+      body = {
+        "message" => exc.msg
+      }.to_json
       env.response.status_code = exc.code
-      env.response.print exc.msg
+      env.response.print body
       env.response.close
     end
     nil

@@ -1,23 +1,19 @@
 <script lang="ts">
-	import {onMount} from 'svelte';
+	import {onMount} from "svelte";
+	import { api, APIStatus } from "./stores/api";
+	import { user } from './stores/user';
 	import Home from './views/Home.svelte';
 	import LogIn from './views/LogIn.svelte';
 
-	let isLoggedIn = false;
-
-	onMount(() => {
-		let token = localStorage.getItem('token')
-		if (!token) {
-			token = (new URLSearchParams(window.location.search)).get("token");
-			if (token)
-				localStorage.setItem('token', token);
-		}
-		isLoggedIn = !!token;
+	onMount(async () => {
+		const response = await $api('/api/me');
+		if (response.status === APIStatus.ok)
+			user.set(response.body);
 	});
 </script>
 
 <main>
-	{#if isLoggedIn}
+	{#if $user}
 		<Home />
 	{:else}
 		<LogIn />

@@ -1,11 +1,7 @@
-import { readable } from 'svelte/store';
+import { derived } from 'svelte/store';
+import { api } from './api';
 import type { Settings } from "../components/types";
 
-export const settings = readable({}, async function start(set) {
-	const response : Settings = await (await fetch('/api/settings')).json();
-  set(response);
-
-	return function stop() {
-		set({});
-	};
+export const settings = derived<Settings>(api, async $api => {
+	return (await $api('/api/settings')).body;
 });

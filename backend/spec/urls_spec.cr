@@ -4,7 +4,7 @@ require "http"
 describe Shorter do
   it "fails when getting /api/url with no auth" do
     get "/api/url"
-    response.status_code.should eq 302
+    response.status_code.should eq 401
   end
 
   it "gets /api/url" do
@@ -46,7 +46,7 @@ describe Shorter do
 
   it "fails when posting /api/url with no auth" do
     post "/api/url"
-    response.status_code.should eq 302
+    response.status_code.should eq 401
   end
 
   it "posts /api/url" do
@@ -76,7 +76,7 @@ describe Shorter do
 
   it "fails when deleting /api/url/:url_id with no auth" do
     delete "/api/url/1"
-    response.status_code.should eq 302
+    response.status_code.should eq 401
   end
 
   it "fails when deleting /api/url/:url_id for non-existing URL" do
@@ -144,7 +144,7 @@ describe Shorter do
 
   it "fails when putting /api/url/:url_id with no auth" do
     put "/api/url/1"
-    response.status_code.should eq 302
+    response.status_code.should eq 401
   end
 
   it "fails when putting /api/url/:url_id for non-existing URL" do

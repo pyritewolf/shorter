@@ -12,11 +12,11 @@ end
 def validate_auth(env)
   return false unless env.request.headers["Authorization"]?
   unless value = env.request.headers["Authorization"]
-    return  env.redirect ENV["CLIENT_URL"]
+    return false
   end
   return false unless value.size > 0 && value.starts_with?("Bearer")
   user = Shorter::Controller::OAuth2.get_user_from_token(value)
-  env.redirect ENV["CLIENT_URL"] unless user.not_nil!
+  return false unless user.not_nil!
   env.request.user = user
   env.response.content_type = "application/json"
   return true
@@ -28,8 +28,8 @@ class Shorter::GetAuthHandler < Kemal::Handler
   def call(env)
     # continue on to next handler unless the request matches the only filter
     return call_next(env) unless only_match?(env)
-    return call_next(env) if validate_auth(env)
-    return env.redirect ENV["CLIENT_URL"]
+    return call_next(env) if validate_auth(env) 
+    raise Shorter::HttpError.new(401)
   end
 end
 
@@ -40,7 +40,7 @@ class Shorter::PostAuthHandler < Kemal::Handler
     # continue on to next handler unless the request matches the only filter
     return call_next(env) unless only_match?(env)
     return call_next(env) if validate_auth(env)
-    return env.redirect ENV["CLIENT_URL"]
+    raise Shorter::HttpError.new(401)
   end
 end
 
@@ -51,7 +51,7 @@ class Shorter::PutAuthHandler < Kemal::Handler
     # continue on to next handler unless the request matches the only filter
     return call_next(env) unless only_match?(env)
     return call_next(env) if validate_auth(env)
-    return env.redirect ENV["CLIENT_URL"]
+    raise Shorter::HttpError.new(401)
   end
 end
 
@@ -62,6 +62,6 @@ class Shorter::DeleteAuthHandler < Kemal::Handler
     # continue on to next handler unless the request matches the only filter
     return call_next(env) unless only_match?(env)
     return call_next(env) if validate_auth(env)
-    return env.redirect ENV["CLIENT_URL"]
+    raise Shorter::HttpError.new(401)
   end
 end
