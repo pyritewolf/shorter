@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Loading from "./components/Loading.svelte";
-	import { api, APIStatus } from "./stores/api";
+	import { api } from "./stores/api";
 	import { user } from './stores/user';
+	import { APIStatus } from "./types";
 	import Home from './views/Home.svelte';
 	import LogIn from './views/LogIn.svelte';
 

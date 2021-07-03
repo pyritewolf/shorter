@@ -34,6 +34,7 @@ class Shorter::Controller::URL
         user_id: user.id
       })
       url.save!
+      url.to_json
     }
   end
 
@@ -59,6 +60,7 @@ class Shorter::Controller::URL
       url.path = env.params.json["path"].to_s
       url.is_private = JSON.parse(env.params.json["is_private"].to_s).as_bool
       url.save!
+      url.to_json
     }
   end
 

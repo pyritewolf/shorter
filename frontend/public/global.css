@@ -39,6 +39,11 @@
 		var(--dark-secondary) 0%,
 		var(--dark-primary) 50%,
 		var(--dark-tertiary) 100%);
+	--gradient-error: linear-gradient(
+		135deg,
+		var(--error) 0%,
+		var(--dark-tertiary) 50%,
+		var(--dark-primary) 100%);
 
 	--gradient-animation: backgroundMagic 20s linear infinite;
 	--transition: 0.2s;

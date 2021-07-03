@@ -2,10 +2,11 @@
 	import {onMount} from 'svelte';
 	import Button from '../components/form/Button.svelte';
 	import Input from '../components/form/Input.svelte';
-	import {Color} from '../types'
+	import { APIStatus, Color, getErrorFor} from '../types'
+	import type { APIError } from '../types'
   import { settings } from '../stores/settings';
   import { user } from '../stores/user';
-	import {api, APIStatus} from '../stores/api';
+	import {api} from '../stores/api';
   import Url from '../components/Url.svelte';
 	import Toggle from '../components/form/Toggle.svelte';
 	import { InputType } from '../components/types';
@@ -20,16 +21,18 @@
 
 	let formData = initialFormData();
 	let urls: Array<URL> = [];
+	let formError: APIError | null = null;
 	
 	const handleSubmit = async () => {
 		const response = await $api('/api/url', {
 			method: "POST",
 			body: JSON.stringify(formData),
 		});
-		if (response.status === APIStatus.ok) {
-			formData = initialFormData();
-			await getURLs();
-		}
+		if (response.status === APIStatus.error)
+			return formError = response.body;
+		formError = null;
+		formData = initialFormData();
+		await getURLs();
 	};
 	
 	const getURLs = async () => {
@@ -49,6 +52,7 @@
 			placeholder="https://yourSuperDuperLong.Url/withWeirdSymbols/andSuperBoringDetails" 
 			bind:value={formData.redirect_to}
 			type={InputType.url}
+			error={getErrorFor('redirect_to', formError)}
 			/> 
 		<Input
 			required
@@ -59,6 +63,7 @@
 			pattern={"[a-zA-Z0-9_\-]{3,}"}
 			bind:value={formData.path}
 			help="At least 3 characters, only letters, numbers, hyphens and underscores"
+			error={getErrorFor('path', formError)}
 			/> 
 		<Toggle name="private" bind:value={formData.is_private}>
 			Make private

@@ -9,6 +9,7 @@
   export let pattern : string | null;
   export let pre : string | null;
   export let help : string | null;
+  export let error : string | null;
   
   let inputElement;
   let focused : boolean = false;
@@ -57,6 +58,10 @@
     color: var(--gray);
   }
 
+  .top .errorMsg {
+    color: var(--error);
+  }
+
   .animation {
     background-color: var(--darkest-gray);
     border-radius: var(--radius);
@@ -70,6 +75,10 @@
   .focused .animation {
     transition: var(--transition);
 	  animation: var(--gradient-animation);
+  }
+
+  .focused.error .animation {
+    background-image: var(--gradient-error);
   }
 
   .input {
@@ -112,13 +121,17 @@
 </style>
 <div
   class="field"
-  class:focused>
+  class:focused
+  class:error={!!error}>
   <div class="top">
     {#if label}<label for={name}>
       {label}{#if required}<span> *</span>{/if}
     </label>{/if}
-    {#if help}
+    {#if help && !error}
       <div class="help">{help}</div>
+    {/if}
+    {#if error}
+      <div class="errorMsg">{error}</div>
     {/if}
   </div>
   <div

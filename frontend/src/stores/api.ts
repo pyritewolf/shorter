@@ -1,15 +1,6 @@
 import { derived } from 'svelte/store';
+import { APIStatus, APIResponse } from '../types';
 import { user } from "./user";
-
-export enum APIStatus {
-  ok = "ok",
-  error = "error",
-};
-
-type APIResponse = {
-  status: APIStatus;
-  body: any;
-}
 
 export const api = derived(user, $user => {
   const method = async (path: string, options: any = { headers: {}}): Promise<APIResponse | null> => {
@@ -30,18 +21,17 @@ export const api = derived(user, $user => {
         'Content-Type': 'application/json',
         ...(opts.headers),
       }
-    const response = await fetch(path, opts);
-    if (response.status === 401) {
-      user.update(() => {
-        localStorage.removeItem('token');
-        return null
-      })
-    }
-
+      const response = await fetch(path, opts);
+      const body = await response.json();
+      if (response.status === 401) {
+        user.update(() => {
+          localStorage.removeItem('token');
+          return null
+        })
+      }
     let status = APIStatus.ok;
     if (response.status < 200 || response.status >= 300)
       status = APIStatus.error;
-    const body = await response.json();
     return { status, body };
   };
   return method;

@@ -4,12 +4,15 @@
   import { ButtonType, IconName, Size } from "./types";
   import type { Settings, URL } from "./types";
   import Toggle from "./form/Toggle.svelte";
-  import { api, APIStatus } from "../stores/api";
+  import { api } from "../stores/api";
+  import { APIStatus } from "../types";
+  import type { APIError } from "../types";
 
   export let url : URL;
   export let shortUrl: string;
   export let isOwn : Boolean = false;
   export let onAction : Function;
+	let formError: APIError | null = null;
 
   let copied = false;
   let enableEdit = false;
@@ -50,14 +53,14 @@
   }
 
   const handleEdit = async () => {
-		const response = await $api(`/api/url/${url.id}`, {
+		const {status, body} = await $api(`/api/url/${url.id}`, {
 			method: "PUT",
 			body: JSON.stringify(url),
 		});
-		if (response.status === APIStatus.ok) {
-      enableEdit = false;
-      onAction();
-    }
+		if (status === APIStatus.error) 
+      return formError = body
+    enableEdit = false;
+    onAction();
   }
 
   const toggleEdit = () => {
