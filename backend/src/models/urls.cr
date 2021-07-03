@@ -1,5 +1,3 @@
-require "clear"
-
 class Shorter::URL
   include Clear::Model
   
@@ -11,5 +9,4 @@ class Shorter::URL
   column is_private : Bool
 
   column id : Int32, primary: true, presence: false
-
 end

@@ -35,24 +35,15 @@ module Shorter
     env.response.content_type = "application/json"
   end
 
-
-  class HttpError < Exception
-    property code, msg
-
-    def initialize(@code : Int = 500, @msg : String = "")
-      if @code == 401 && @msg == ""
-        @msg = "You need to log in to do this!"
-      end
-      super(msg)
-    end
-  end
-
   error 500 do |env, exc|
     case exc
     when HttpError
       body = {
         "message" => exc.msg
       }.to_json
+      if exc.code == 422 && exc.field && exc.msg == ""
+        body = exc.field.to_json
+      end
       env.response.status_code = exc.code
       env.response.print body
       env.response.close

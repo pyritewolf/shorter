@@ -61,7 +61,7 @@ describe Shorter do
     headers.add("Content-Type", "application/json")
     body = {
       "path" => "ecthelion",
-      "redirect_to" => "gondolin",
+      "redirect_to" => "http://gondolin.com",
       "is_private" => false,
     }
     post("/api/url", headers, body.to_json)
@@ -106,7 +106,7 @@ describe Shorter do
     user_2.save!
     url = Shorter::URL.new({
       path: "balrog",
-      redirect_to: "gondolin",
+      redirect_to: "http://gondolin.com",
       user_id: user_2.id,
       is_private: false,
     })
@@ -131,7 +131,7 @@ describe Shorter do
     headers.add("Content-Type", "application/json")
     url = Shorter::URL.new({
       path: "balrog",
-      redirect_to: "gondolin",
+      redirect_to: "http://gondolin.com",
       user_id: user.id,
       is_private: false,
     })
@@ -155,7 +155,7 @@ describe Shorter do
     user.save!
     body = {
       "path" => "ecthelion",
-      "redirect_to" => "gondolin",
+      "redirect_to" => "http://gondolin.com",
       "is_private" => false,
     }
     token = Shorter::Controller::OAuth2.get_token_for(user)
@@ -179,14 +179,14 @@ describe Shorter do
     user_2.save!
     url = Shorter::URL.new({
       path: "balrog",
-      redirect_to: "gondolin",
+      redirect_to: "http://gondolin.com",
       user_id: user_2.id,
       is_private: false,
     })
     url.save!
     body = {
       "path" => "ecthelion",
-      "redirect_to" => "gondolin"
+      "redirect_to" => "http://silver_fountain.com"
     }
     token = Shorter::Controller::OAuth2.get_token_for(user_1)
     headers = HTTP::Headers.new
@@ -194,8 +194,8 @@ describe Shorter do
     headers.add("Content-Type", "application/json")
     put("/api/url/#{url.id}", headers, body.to_json)
     response.status_code.should eq 403
-    url.path.should eq "balrog"
-    url.redirect_to.should eq "gondolin"
+    url.path.should eq url.path
+    url.redirect_to.should eq url.redirect_to
   end
 
   it "puts /api/url/:url_id" do
@@ -210,14 +210,14 @@ describe Shorter do
     headers.add("Content-Type", "application/json")
     url = Shorter::URL.new({
       path: "balrog",
-      redirect_to: "gondolin",
+      redirect_to: "http://gondolin.com",
       user_id: user.id,
       is_private: false
     })
     url.save!
     body = {
       "path" => "ecthelion",
-      "redirect_to" => "silver_fountain",
+      "redirect_to" => "https://silver_fountain.com",
       "is_private" => true,
     }
     put("/api/url/#{url.id}", headers, body.to_json)

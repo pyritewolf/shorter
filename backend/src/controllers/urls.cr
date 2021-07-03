@@ -1,21 +1,40 @@
+require "uri"
+
 class Shorter::Controller::URL
+  private def self.run_url_operation(user : Shorter::User, body, &block)
+    begin
+      raise HttpError.new(
+        FieldError.new("redirect_to", "Redirect value must be a valid URL")
+      ) unless URI.parse(body["redirect_to"].to_s).absolute?
+      yield
+    rescue ex : KeyError
+      unless msg = ex.message
+        raise HttpError.new(
+          FieldError.new("unknown", "Missing URL information, check your form!")
+        )
+      end
+      raise HttpError.new(
+        FieldError.new(msg.split(" ")[-1], "This field is required!")
+      )
+    rescue ex : PQ::PQError
+      raise HttpError.new(
+        FieldError.new("path", "Path '#{body["path"]}' is already in use")
+      ) if ex.fields.any? { |f| f.message == "urls_path_key" }
+    end
+  end
+
   def self.handle_post_url(env)
     user = env.request.user
     raise HttpError.new(401) if user.nil?
-    begin
+    self.run_url_operation(user, env.params.json) {
       url = Shorter::URL.new({
         path: env.params.json["path"],
         redirect_to: env.params.json["redirect_to"],
         is_private: env.params.json["is_private"],
         user_id: user.id
       })
-    rescue ex : KeyError
-      unless msg = ex.message
-        raise HttpError.new(422, "Missing URL information, check your form!")
-      end
-      raise HttpError.new(422, "Missing URL information: #{msg.split(" ")[-1]}")
-    end
-    url.save!
+      url.save!
+    }
   end
 
   def self.handle_get_urls(env)
@@ -35,17 +54,12 @@ class Shorter::Controller::URL
     raise HttpError.new(401) if user.nil?
 
     raise HttpError.new(403, "You can't edit that URL") unless url.user_id == user.id
-    begin
+    self.run_url_operation(user, env.params.json) {
       url.redirect_to = env.params.json["redirect_to"].to_s
       url.path = env.params.json["path"].to_s
       url.is_private = JSON.parse(env.params.json["is_private"].to_s).as_bool
-    rescue ex : KeyError
-      unless msg = ex.message
-        raise HttpError.new(422, "Missing URL information, check your form!")
-      end
-      raise HttpError.new(422, "Missing URL information: #{msg.split(" ")[-1]}")
-    end
-    url.save!
+      url.save!
+    }
   end
 
   def self.handle_delete_url(env)
