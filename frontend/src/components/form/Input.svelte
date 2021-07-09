@@ -6,10 +6,10 @@
   export let value : string | number = "";
   export let label : string  = "";
   export let required : boolean = false;
-  export let pattern : string | null;
-  export let pre : string | null;
-  export let help : string | null;
-  export let error : string | null;
+  export let pattern : string | null = null;
+  export let pre : string | null = null;
+  export let help : string | null = null;
+  export let error : string | null = null;
   
   let inputElement;
   let focused : boolean = false;

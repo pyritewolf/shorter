@@ -17,9 +17,15 @@ class Shorter::Controller::URL
         FieldError.new(msg.split(" ")[-1], "This field is required!")
       )
     rescue ex : PQ::PQError
+      puts "hey, shit happened!"
+      puts ex.fields
       raise HttpError.new(
         FieldError.new("path", "Path '#{body["path"]}' is already in use")
       ) if ex.fields.any? { |f| f.message == "urls_path_key" }
+    rescue ex
+      raise HttpError.new(
+        FieldError.new("path", "Path '#{body["path"]}' is already in use")
+      ) if ex.to_s.includes? "urls_path_key"
     end
   end
 

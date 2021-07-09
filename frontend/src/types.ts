@@ -1,4 +1,4 @@
-import { User } from "./components/types"
+import type { Settings, User } from "./components/types"
 
 export enum Color {
   primary = "--primary",
@@ -25,7 +25,7 @@ export enum APIStatus {
 
 export type APIResponse = {
   status: APIStatus;
-  body: APIError | Array<URL> | User;
+  body: APIError | Array<URL> | User | Settings;
 }
 
 export type APIError = {
